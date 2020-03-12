@@ -1,5 +1,6 @@
+import io
 import requests
-import os
+import pandas as pd
 
 
 def getData():
@@ -16,23 +17,18 @@ def getData():
     toIndexData = pageContent.index(endTag, fromIndexData)
 
     # Filter to keep only relevant data
-    newData = pageContent[fromIndexData:toIndexData]
-    print(newData)
+    newData = io.StringIO(pageContent[fromIndexData:toIndexData])
+
+    naInt = lambda x: x if str(x).isnumeric else 0
+    df = pd.read_table(newData, sep=";", index_col=0, dtype={"Gemeente:":str}, na_values="", converters={"Gemnr": naInt, "Aantal": naInt})
+    print(df)
 
     # read timestamp
-    timeTag = "peildatum "
-    fromIndexTS = newData.index(timeTag) + len(timeTag)
-    toIndexTS = newData.find(";", fromIndexTS)
-    timeStamp = newData[fromIndexTS:toIndexTS]
-
-    # verify if timestamp is new (csv does not yet exist)
-    # dataPath = os.path.
-    # print(dataPath)
-    # dataFiles = os.listdir(dataPath)
-    # print(dataFiles)
-
-
+    timeStamp = str(df.index[0][len("peildatum "):]).replace(":", "-").replace(" ", "_")
+    
     # Store to csv
+    df.to_csv("data/" + timeStamp + ".csv")
+
 
 
 # Main script execution
