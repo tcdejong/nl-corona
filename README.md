@@ -1,5 +1,5 @@
 # nl-corona
-Quick-and-dirty scraper to load csv data from the [RIVM](https://www.rivm.nl/coronavirus-kaart-van-nederland). 
+Quick-and-dirty scraper to load csv data from the [RIVM Corona map](https://www.rivm.nl/coronavirus-kaart-van-nederland) of the Netherlands. 
 
 Currently just stores the data in a CSV file named after the data's timestamp. 
 
