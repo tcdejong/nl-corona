@@ -9,17 +9,18 @@ import pandas as pd
 
 def getData():
     """
-    Scrape corona infections per Dutch municipality from the RIVM and store data as CSV
+    Scrape Corona infections per Dutch municipality from the RIVM and store data as CSV.
     """
+    ### Collect the data
     # Download source from rivm corona page
     url = "https://www.rivm.nl/coronavirus-kaart-van-nederland"
     pageContent = requests.get(url).text
 
-    # Find start and end of csv data <div>
+    # Find start and end of csv data based on <div> tags
     startTag, endTag = '<div id="csvData">', '</div>'
     fromIndex = pageContent.index(startTag) + len(startTag)
     toIndex = pageContent.index(endTag, fromIndex)
-    # Trim whitespace, then store csv data as a list of strings
+    # Extract data, trim whitespace, split multi-line string to list
     csvLines = pageContent[fromIndex:toIndex].strip().splitlines()
 
 
