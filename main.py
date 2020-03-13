@@ -9,7 +9,7 @@ import pandas as pd
 
 def getData():
     """
-    Load source of the rivm corona page, clean it up, then save as csv
+    Scrape corona infections per Dutch municipality from the RIVM and store data as CSV
     """
     # Download source from rivm corona page
     url = "https://www.rivm.nl/coronavirus-kaart-van-nederland"
