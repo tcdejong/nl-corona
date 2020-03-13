@@ -1,39 +1,43 @@
 # TODO: create merged dataframe with column per datestamp
 # TODO: Verify if datestamp.csv already exists, don't overwrite
 # TODO: Make pretty plots
-# TODO: Clean up (docstrings, )
+# TODO: Clean up (docstrings, ...)
 
 import io
 import requests
 import pandas as pd
 
-print(int("-2"))
-
 def getData():
     """
-    Load source of the rivm corona page, then save as csv
+    Load source of the rivm corona page, clean it up, then save as csv
     """
     # Download source from rivm corona page
     url = "https://www.rivm.nl/coronavirus-kaart-van-nederland"
     pageContent = requests.get(url).text
 
     # Find start and end of csv data <div>
-    startTag, endTag = '<div id="csvData">', "</div>"
-    fromIndexData = pageContent.index(startTag) + len(startTag)
-    toIndexData = pageContent.index(endTag, fromIndexData)
+    startTag, endTag = '<div id="csvData">', '</div>'
+    fromIndex = pageContent.index(startTag) + len(startTag)
+    toIndex = pageContent.index(endTag, fromIndex)
+    # Trim whitespace, then store csv data as a list of strings
+    csvLines = pageContent[fromIndex:toIndex].strip().splitlines()
 
-    # Filter to keep only relevant data
-    newData = io.StringIO(pageContent[fromIndexData:toIndexData])
 
+    ### Clean up csv formatting
+    # Count number of column headers
+    numCols = csvLines[0].count(";") + 1
+    # Remove fields without column headers
+    csvLines = [";".join(str(line).split(";")[:numCols]) for line in csvLines]
+    csvData = "\n".join(csvLines)
+
+
+    
+    # Define how to deal with NA values
     naInt = lambda x: int(x) if len(x) else 0
-    df = pd.read_table(
-        newData, 
-        sep=";", 
-        index_col=0, 
-        dtype={"Gemeente:":str}, 
-        converters={"Gemnr": naInt, "Aantal": naInt}
-    )
-    print(df)
+
+    # Convert csvData to StringIO class for pd.read_table() compatibility
+    csvData = io.StringIO(csvData)
+    df = pd.read_table(csvData, sep=";", index_col=0, dtype={"Gemeente:":str}, converters={"Gemnr": naInt, "Aantal": naInt})
 
     # read timestamp
     timeStamp = str(df.index[0][len("peildatum "):]).replace(":", "-").replace(" ", "_")
