@@ -8,7 +8,7 @@ After these additions, unit tests will be added.
 
 # Automated execution
 
-The script can be automatically executed numerous ways. The easiest is using a `.bat` file and Windows' Task Scheduler.
+The script can be automatically executed numerous ways. The easiest is using a `.bat` file and Windows' built-in Task Scheduler.
 Create a `.bat` file with the following contents:
 
 ```
@@ -16,6 +16,6 @@ cd "C:\...\...\nl-corona\"
 python main.py
 ```
 
-Adjust the path so that it points to the copy of this repository. If using `python3` instead of `python` in your system environment variables (`PATH`), edit the command accordingly. 
+Adjust the path so that it points to your copy of this repository. If using `python3` instead of `python` in your system environment variables (`PATH`), edit the command accordingly. 
 
-In the Windows Task Scheduler, create a new task with `Action: Start a program`. Select the `.bat` file as program to execute. No further parameters are required. All other settings can be configured as you please.
+In the Task Scheduler, create a new task with `Action: Start a program`. Select the `.bat` file as program to execute. No further parameters are required. All other settings can be configured as you please.
