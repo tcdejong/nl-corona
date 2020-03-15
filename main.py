@@ -4,8 +4,8 @@
 # TODO: Clean up (docstrings, ...)
 
 import io
-import requests
 import pandas as pd
+import requests
 
 def getData():
     """
