@@ -2,6 +2,7 @@
 # TODO: Verify if datestamp.csv already exists, don't overwrite
 # TODO: Make pretty plots
 # TODO: Clean up (docstrings, ...)
+# TODO: Create consistent data file names
 
 import io
 import pandas as pd
@@ -41,10 +42,13 @@ def getData():
     df = pd.read_table(csvData, sep=";", index_col=0, dtype={"Gemeente:":str}, converters={"Gemnr": naInt, "Aantal": naInt})
 
     # read timestamp
-    timeStamp = str(df.index[0][len("peildatum "):]).replace(":", "-").replace(" ", "_")
+    startTag, endTag = "<p>aantal per ", "</p>"
+    fromIndex = pageContent.index(startTag) + len(startTag)
+    toIndex = pageContent.index(endTag, fromIndex)
+    timeStamp = str(pageContent[fromIndex:toIndex]).replace(" ", "_").replace(" ", "_").replace(".", "-") # second replace is no-break space U+00A0
     
     # Store to csv
-    df[1:].to_csv("data/" + timeStamp + ".csv")
+    df.to_csv("data/" + timeStamp + ".csv")
 
 
 
